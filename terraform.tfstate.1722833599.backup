@@ -1,0 +1,813 @@
+{
+  "version": 4,
+  "terraform_version": "1.9.3",
+  "serial": 65,
+  "lineage": "e78fdd31-3dfa-fb11-1e34-1be325df2118",
+  "outputs": {
+    "argocd_initial_admin_secret": {
+      "value": "kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath=\"{.data.password}\" | base64 -d",
+      "type": "string"
+    },
+    "argocd_initial_admin_username": {
+      "value": "admin",
+      "type": "string"
+    },
+    "argocd_server_load_balancer": {
+      "value": "8138ec4f-6348-414b-98a5-9f3e2e6126dd.lb.civo.com",
+      "type": "string"
+    },
+    "argocd_server_load_balancer_ip": {
+      "value": "74.220.17.235",
+      "type": "string"
+    }
+  },
+  "resources": [
+    {
+      "mode": "data",
+      "type": "kubernetes_service",
+      "name": "argocd_server",
+      "provider": "provider[\"registry.terraform.io/hashicorp/kubernetes\"]",
+      "instances": [
+        {
+          "schema_version": 0,
+          "attributes": {
+            "id": "argocd/argocd-server",
+            "metadata": [
+              {
+                "annotations": {
+                  "kubernetes.civo.com/cluster-id": "d11efe36-fd39-4228-8e0f-f5badd470511",
+                  "kubernetes.civo.com/firewall-id": "9d3b4b55-bc6b-4d60-a5dd-598419a7d573",
+                  "kubernetes.civo.com/loadbalancer-algorithm": "round_robin",
+                  "kubernetes.civo.com/loadbalancer-id": "8138ec4f-6348-414b-98a5-9f3e2e6126dd",
+                  "kubernetes.civo.com/loadbalancer-name": "workload1-argocd-argocd-server",
+                  "kubernetes.civo.com/max-concurrent-requests": "10000",
+                  "meta.helm.sh/release-name": "argocd",
+                  "meta.helm.sh/release-namespace": "argocd",
+                  "service.beta.kubernetes.io/aws-load-balancer-type": "nlb"
+                },
+                "generation": 0,
+                "labels": {
+                  "app.kubernetes.io/component": "server",
+                  "app.kubernetes.io/instance": "argocd",
+                  "app.kubernetes.io/managed-by": "Helm",
+                  "app.kubernetes.io/name": "argocd-server",
+                  "app.kubernetes.io/part-of": "argocd",
+                  "helm.sh/chart": "argo-cd-4.5.2"
+                },
+                "name": "argocd-server",
+                "namespace": "argocd",
+                "resource_version": "1909",
+                "uid": "3de3d6c5-c9b3-448a-8192-fcb2b05abe06"
+              }
+            ],
+            "spec": [
+              {
+                "allocate_load_balancer_node_ports": true,
+                "cluster_ip": "10.110.251.40",
+                "cluster_ips": [
+                  "10.110.251.40"
+                ],
+                "external_ips": [],
+                "external_name": "",
+                "external_traffic_policy": "Cluster",
+                "health_check_node_port": 0,
+                "internal_traffic_policy": "Cluster",
+                "ip_families": [
+                  "IPv4"
+                ],
+                "ip_family_policy": "SingleStack",
+                "load_balancer_class": "",
+                "load_balancer_ip": "",
+                "load_balancer_source_ranges": [],
+                "port": [
+                  {
+                    "app_protocol": "",
+                    "name": "http",
+                    "node_port": 32681,
+                    "port": 80,
+                    "protocol": "TCP",
+                    "target_port": "server"
+                  },
+                  {
+                    "app_protocol": "",
+                    "name": "https",
+                    "node_port": 31095,
+                    "port": 443,
+                    "protocol": "TCP",
+                    "target_port": "server"
+                  }
+                ],
+                "publish_not_ready_addresses": false,
+                "selector": {
+                  "app.kubernetes.io/instance": "argocd",
+                  "app.kubernetes.io/name": "argocd-server"
+                },
+                "session_affinity": "None",
+                "session_affinity_config": [],
+                "type": "LoadBalancer"
+              }
+            ],
+            "status": [
+              {
+                "load_balancer": [
+                  {
+                    "ingress": [
+                      {
+                        "hostname": "8138ec4f-6348-414b-98a5-9f3e2e6126dd.lb.civo.com",
+                        "ip": "74.220.17.235"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          },
+          "sensitive_attributes": []
+        }
+      ]
+    },
+    {
+      "mode": "managed",
+      "type": "civo_firewall",
+      "name": "kubefirst",
+      "provider": "provider[\"registry.terraform.io/civo/civo\"]",
+      "instances": [
+        {
+          "schema_version": 0,
+          "attributes": {
+            "create_default_rules": true,
+            "egress_rule": [
+              {
+                "action": "allow",
+                "cidr": [
+                  "0.0.0.0/0"
+                ],
+                "id": "060de836-8258-4bdc-891a-8f602aedd30c",
+                "label": "All UDP ports open",
+                "port_range": "1-65535",
+                "protocol": "udp"
+              },
+              {
+                "action": "allow",
+                "cidr": [
+                  "0.0.0.0/0"
+                ],
+                "id": "108ce5dc-2fd0-418d-925a-aebf239efe1d",
+                "label": "Ping/traceroute",
+                "port_range": "",
+                "protocol": "icmp"
+              },
+              {
+                "action": "allow",
+                "cidr": [
+                  "0.0.0.0/0"
+                ],
+                "id": "e055126c-9fe0-45cf-93c3-21876f1fbe59",
+                "label": "All TCP ports open",
+                "port_range": "1-65535",
+                "protocol": "tcp"
+              }
+            ],
+            "id": "2b23caa0-99f0-41bb-ae1f-6a6b4898d6d4",
+            "ingress_rule": [
+              {
+                "action": "allow",
+                "cidr": [
+                  "0.0.0.0/0"
+                ],
+                "id": "1df095a2-788d-4a0d-9d8a-369154fc98a2",
+                "label": "All TCP ports open",
+                "port_range": "1-65535",
+                "protocol": "tcp"
+              },
+              {
+                "action": "allow",
+                "cidr": [
+                  "0.0.0.0/0"
+                ],
+                "id": "c307a820-b9f9-45aa-9f95-6d0f5fe0b636",
+                "label": "Ping/traceroute",
+                "port_range": "",
+                "protocol": "icmp"
+              },
+              {
+                "action": "allow",
+                "cidr": [
+                  "0.0.0.0/0"
+                ],
+                "id": "ee1cc1e3-8da3-4020-9d50-28604f77ef2b",
+                "label": "All UDP ports open",
+                "port_range": "1-65535",
+                "protocol": "udp"
+              }
+            ],
+            "name": "workload1",
+            "network_id": "cb9cca7c-4fda-4f47-a7af-48aa505ef5d3",
+            "region": "lon1"
+          },
+          "sensitive_attributes": [],
+          "private": "bnVsbA==",
+          "dependencies": [
+            "civo_network.kubefirst"
+          ]
+        }
+      ]
+    },
+    {
+      "mode": "managed",
+      "type": "civo_kubernetes_cluster",
+      "name": "kubefirst",
+      "provider": "provider[\"registry.terraform.io/civo/civo\"]",
+      "instances": [
+        {
+          "schema_version": 0,
+          "attributes": {
+            "api_endpoint": "https://74.220.16.18:6443",
+            "applications": null,
+            "cluster_type": "talos",
+            "cni": "flannel",
+            "created_at": "2024-08-05 04:42:12 +0000 UTC",
+            "dns_entry": "d11efe36-fd39-4228-8e0f-f5badd470511.k8s.civo.com",
+            "firewall_id": "2b23caa0-99f0-41bb-ae1f-6a6b4898d6d4",
+            "id": "d11efe36-fd39-4228-8e0f-f5badd470511",
+            "installed_applications": [],
+            "kubeconfig": "apiVersion: v1\nkind: Config\nclusters:\n- name: workload1-c591-269dda\n  cluster:\n    server: https://74.220.16.18:6443\n    certificate-authority-data: LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSUJpVENDQVRDZ0F3SUJBZ0lSQUlUQXlrR2UyT2dORmpNMzY2ajk3QUF3Q2dZSUtvWkl6ajBFQXdJd0ZURVQKTUJFR0ExVUVDaE1LYTNWaVpYSnVaWFJsY3pBZUZ3MHlOREE0TURVd05EUXlNVEphRncwek5EQTRNRE13TkRReQpNVEphTUJVeEV6QVJCZ05WQkFvVENtdDFZbVZ5Ym1WMFpYTXdXVEFUQmdjcWhrak9QUUlCQmdncWhrak9QUU1CCkJ3TkNBQVQ3VHBiREVWbERUemt4SDl6NWo1eWFuNC9Tc1RMelBtZGdwN2Q4aUJmRitJTU43UEQ1SVdsTDVRS1AKVFhtcGszNDVNbnRsZmE2dGdlaWZYMllQWG9nM28yRXdYekFPQmdOVkhROEJBZjhFQkFNQ0FvUXdIUVlEVlIwbApCQll3RkFZSUt3WUJCUVVIQXdFR0NDc0dBUVVGQndNQ01BOEdBMVVkRXdFQi93UUZNQU1CQWY4d0hRWURWUjBPCkJCWUVGT3k2Lzg4NWMyR1ZBQUFlL3g1VHl3dVVoZGVETUFvR0NDcUdTTTQ5QkFNQ0EwY0FNRVFDSUFwbk1DSVAKVUFlbmZZTzVyM2RsN1lMSnhablA4anpPWnBDdzN5NS9BanExQWlBYWtGekMvU0pKN2tnb0RyTkdDUVpTOHNLVApwb3U4ZGd4bUJLSDVYZlNVcVE9PQotLS0tLUVORCBDRVJUSUZJQ0FURS0tLS0tCg==\nusers:\n- name: admin@workload1-c591-269dda\n  user:\n    client-certificate-data: LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSUJoVENDQVN1Z0F3SUJBZ0lSQUk1QmxUSExTekJHWU5iK29hL0hWVU13Q2dZSUtvWkl6ajBFQXdJd0ZURVQKTUJFR0ExVUVDaE1LYTNWaVpYSnVaWFJsY3pBZUZ3MHlOREE0TURVd05EUTBOREJhRncweU5UQTRNRFV3TkRRMApOVEJhTUNreEZ6QVZCZ05WQkFvVERuTjVjM1JsYlRwdFlYTjBaWEp6TVE0d0RBWURWUVFERXdWaFpHMXBiakJaCk1CTUdCeXFHU000OUFnRUdDQ3FHU000OUF3RUhBMElBQkFpejRtT3RLZEZUc3FyOXZMc1p2OVF1YVZhNzdNRVgKaGNoYnI3bi9ZNnJoSmdMRzdxRkM3ZjE5bURiOUxBWU00WitPQ0RGa1NDZTVyMHdBWkU1a2M2K2pTREJHTUE0RwpBMVVkRHdFQi93UUVBd0lGb0RBVEJnTlZIU1VFRERBS0JnZ3JCZ0VGQlFjREFqQWZCZ05WSFNNRUdEQVdnQlRzCnV2L1BPWE5obFFBQUh2OGVVOHNMbElYWGd6QUtCZ2dxaGtqT1BRUURBZ05JQURCRkFpRUF5VVhneEl5UFV0VGMKYzJSMGI3Z0FyeVpuN2c2cXluaUw5MTlRRk5SZHdVVUNJQkc4K1RwQUdaR1E2STVnVFNGamRlSzh5UzF2SmRqOQplRDZYenFETXhlUHMKLS0tLS1FTkQgQ0VSVElGSUNBVEUtLS0tLQo=\n    client-key-data: LS0tLS1CRUdJTiBFQyBQUklWQVRFIEtFWS0tLS0tCk1IY0NBUUVFSU80NEhXeG9LWXdUUnRIVEVrMm0xLzNESzIyRjlqZVg5U3duTHhXb01wazJvQW9HQ0NxR1NNNDkKQXdFSG9VUURRZ0FFQ0xQaVk2MHAwVk95cXYyOHV4bS8xQzVwVnJ2c3dSZUZ5RnV2dWY5anF1RW1Bc2J1b1VMdAovWDJZTnYwc0JnemhuNDRJTVdSSUo3bXZUQUJrVG1SenJ3PT0KLS0tLS1FTkQgRUMgUFJJVkFURSBLRVktLS0tLQo=\ncontexts:\n- context:\n    cluster: workload1-c591-269dda\n    namespace: default\n    user: admin@workload1-c591-269dda\n  name: admin@workload1-c591-269dda\ncurrent-context: admin@workload1-c591-269dda\n",
+            "kubernetes_version": "1.27.0",
+            "master_ip": "74.220.16.18",
+            "name": "workload1",
+            "network_id": "cb9cca7c-4fda-4f47-a7af-48aa505ef5d3",
+            "num_target_nodes": 3,
+            "pools": [
+              {
+                "instance_names": [
+                  "workload1-c591-269dda-pool-989a-7cjcz",
+                  "workload1-c591-269dda-pool-989a-g7ipc",
+                  "workload1-c591-269dda-pool-989a-wrzb1"
+                ],
+                "label": "workload1",
+                "labels": {},
+                "node_count": 3,
+                "public_ip_node_pool": false,
+                "size": "g4s.kube.large",
+                "taint": []
+              }
+            ],
+            "ready": true,
+            "region": "lon1",
+            "status": "ACTIVE",
+            "tags": "",
+            "target_nodes_size": "g4s.kube.large",
+            "timeouts": null
+          },
+          "sensitive_attributes": [
+            [
+              {
+                "type": "get_attr",
+                "value": "kubeconfig"
+              }
+            ]
+          ],
+          "private": "eyJlMmJmYjczMC1lY2FhLTExZTYtOGY4OC0zNDM2M2JjN2M0YzAiOnsiY3JlYXRlIjoxODAwMDAwMDAwMDAwLCJkZWxldGUiOjE4MDAwMDAwMDAwMDAsInVwZGF0ZSI6MTgwMDAwMDAwMDAwMH19",
+          "dependencies": [
+            "civo_firewall.kubefirst",
+            "civo_network.kubefirst"
+          ]
+        }
+      ]
+    },
+    {
+      "mode": "managed",
+      "type": "civo_network",
+      "name": "kubefirst",
+      "provider": "provider[\"registry.terraform.io/civo/civo\"]",
+      "instances": [
+        {
+          "schema_version": 0,
+          "attributes": {
+            "cidr_v4": "192.168.1.0/24",
+            "default": false,
+            "id": "cb9cca7c-4fda-4f47-a7af-48aa505ef5d3",
+            "label": "workload1",
+            "name": "cust-workload1-6a5143cb-c5918e0544f3",
+            "nameservers_v4": [
+              "8.8.8.8",
+              "1.1.1.1"
+            ],
+            "region": "lon1",
+            "vlan_allocation_pool_v4_end": null,
+            "vlan_allocation_pool_v4_start": null,
+            "vlan_cidr_v4": null,
+            "vlan_gateway_ip_v4": null,
+            "vlan_id": null,
+            "vlan_physical_interface": null
+          },
+          "sensitive_attributes": [],
+          "private": "bnVsbA=="
+        }
+      ]
+    },
+    {
+      "mode": "managed",
+      "type": "helm_release",
+      "name": "argocd",
+      "provider": "provider[\"registry.terraform.io/hashicorp/helm\"]",
+      "instances": [
+        {
+          "schema_version": 1,
+          "attributes": {
+            "atomic": false,
+            "chart": "argo-cd",
+            "cleanup_on_fail": false,
+            "create_namespace": true,
+            "dependency_update": false,
+            "description": null,
+            "devel": null,
+            "disable_crd_hooks": false,
+            "disable_openapi_validation": false,
+            "disable_webhooks": false,
+            "force_update": false,
+            "id": "argocd",
+            "keyring": null,
+            "lint": false,
+            "manifest": null,
+            "max_history": 0,
+            "metadata": [
+              {
+                "app_version": "v2.3.3",
+                "chart": "argo-cd",
+                "first_deployed": 1722833207,
+                "last_deployed": 1722833207,
+                "name": "argocd",
+                "namespace": "argocd",
+                "notes": "\nIn order to access the server UI you have the following options:\n\n1. kubectl port-forward service/argocd-server -n argocd 8080:443\n\n    and then open the browser on http://localhost:8080 and accept the certificate\n\n2. enable ingress in the values file `server.ingress.enabled` and either\n      - Add the annotation for ssl passthrough: https://github.com/argoproj/argo-cd/blob/master/docs/operator-manual/ingress.md#option-1-ssl-passthrough\n      - Add the `--insecure` flag to `server.extraArgs` in the values file and terminate SSL at your ingress: https://github.com/argoproj/argo-cd/blob/master/docs/operator-manual/ingress.md#option-2-multiple-ingress-objects-and-hosts\n\n\nAfter reaching the UI the first time you can login with username: admin and the random password generated during the installation. You can find the password by running:\n\nkubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath=\"{.data.password}\" | base64 -d\n\n(You should delete the initial secret afterwards as suggested by the Getting Started Guide: https://github.com/argoproj/argo-cd/blob/master/docs/getting_started.md#4-login-using-the-cli)\n",
+                "revision": 1,
+                "values": "{\"server\":{\"service\":{\"annotations\":{\"service.beta.kubernetes.io/aws-load-balancer-type\":\"nlb\"},\"type\":\"LoadBalancer\"}}}",
+                "version": "4.5.2"
+              }
+            ],
+            "name": "argocd",
+            "namespace": "argocd",
+            "pass_credentials": false,
+            "postrender": [],
+            "recreate_pods": false,
+            "render_subchart_notes": true,
+            "replace": false,
+            "repository": "https://argoproj.github.io/argo-helm",
+            "repository_ca_file": null,
+            "repository_cert_file": null,
+            "repository_key_file": null,
+            "repository_password": null,
+            "repository_username": null,
+            "reset_values": false,
+            "reuse_values": false,
+            "set": [
+              {
+                "name": "server.service.annotations.service\\.beta\\.kubernetes\\.io/aws-load-balancer-type",
+                "type": "",
+                "value": "nlb"
+              },
+              {
+                "name": "server.service.type",
+                "type": "",
+                "value": "LoadBalancer"
+              }
+            ],
+            "set_list": [],
+            "set_sensitive": [],
+            "skip_crds": false,
+            "status": "deployed",
+            "timeout": 300,
+            "values": null,
+            "verify": false,
+            "version": "4.5.2",
+            "wait": true,
+            "wait_for_jobs": false
+          },
+          "sensitive_attributes": [
+            [
+              {
+                "type": "get_attr",
+                "value": "repository_password"
+              }
+            ]
+          ],
+          "private": "eyJzY2hlbWFfdmVyc2lvbiI6IjEifQ==",
+          "dependencies": [
+            "civo_firewall.kubefirst",
+            "civo_kubernetes_cluster.kubefirst",
+            "civo_network.kubefirst"
+          ]
+        }
+      ]
+    },
+    {
+      "mode": "managed",
+      "type": "helm_release",
+      "name": "confluentinc",
+      "provider": "provider[\"registry.terraform.io/hashicorp/helm\"]",
+      "instances": [
+        {
+          "schema_version": 1,
+          "attributes": {
+            "atomic": false,
+            "chart": "confluent-for-kubernetes",
+            "cleanup_on_fail": false,
+            "create_namespace": true,
+            "dependency_update": false,
+            "description": null,
+            "devel": null,
+            "disable_crd_hooks": false,
+            "disable_openapi_validation": false,
+            "disable_webhooks": false,
+            "force_update": false,
+            "id": "confluent-operator",
+            "keyring": null,
+            "lint": false,
+            "manifest": null,
+            "max_history": 0,
+            "metadata": [
+              {
+                "app_version": "2.7.5",
+                "chart": "confluent-for-kubernetes",
+                "first_deployed": 1722833222,
+                "last_deployed": 1722833222,
+                "name": "confluent-operator",
+                "namespace": "confluent",
+                "notes": "                                              The Confluent Operator\n\nThe Confluent Operator brings the component (Confluent Services) specific controllers for kubernetes by providing components specific Custom Resource\nDefinition (CRD) as well as managing other Confluent Platform services\n",
+                "revision": 1,
+                "values": "{}",
+                "version": "0.824.84"
+              }
+            ],
+            "name": "confluent-operator",
+            "namespace": "confluent",
+            "pass_credentials": false,
+            "postrender": [],
+            "recreate_pods": false,
+            "render_subchart_notes": true,
+            "replace": false,
+            "repository": "https://packages.confluent.io/helm",
+            "repository_ca_file": null,
+            "repository_cert_file": null,
+            "repository_key_file": null,
+            "repository_password": null,
+            "repository_username": null,
+            "reset_values": false,
+            "reuse_values": false,
+            "set": [],
+            "set_list": [],
+            "set_sensitive": [],
+            "skip_crds": false,
+            "status": "deployed",
+            "timeout": 300,
+            "values": null,
+            "verify": false,
+            "version": "0.824.84",
+            "wait": true,
+            "wait_for_jobs": false
+          },
+          "sensitive_attributes": [
+            [
+              {
+                "type": "get_attr",
+                "value": "repository_password"
+              }
+            ]
+          ],
+          "private": "eyJzY2hlbWFfdmVyc2lvbiI6IjEifQ==",
+          "dependencies": [
+            "civo_firewall.kubefirst",
+            "civo_kubernetes_cluster.kubefirst",
+            "civo_network.kubefirst"
+          ]
+        }
+      ]
+    },
+    {
+      "mode": "managed",
+      "type": "helm_release",
+      "name": "gateway",
+      "provider": "provider[\"registry.terraform.io/hashicorp/helm\"]",
+      "instances": [
+        {
+          "schema_version": 1,
+          "attributes": {
+            "atomic": false,
+            "chart": "gateway",
+            "cleanup_on_fail": false,
+            "create_namespace": true,
+            "dependency_update": false,
+            "description": null,
+            "devel": null,
+            "disable_crd_hooks": false,
+            "disable_openapi_validation": false,
+            "disable_webhooks": false,
+            "force_update": false,
+            "id": "gateway",
+            "keyring": null,
+            "lint": false,
+            "manifest": null,
+            "max_history": 0,
+            "metadata": [
+              {
+                "app_version": "1.22.3",
+                "chart": "gateway",
+                "first_deployed": 1722833276,
+                "last_deployed": 1722833276,
+                "name": "gateway",
+                "namespace": "istio-ingress",
+                "notes": "\"gateway\" successfully installed!\n\nTo learn more about the release, try:\n  $ helm status gateway -n istio-ingress\n  $ helm get all gateway -n istio-ingress\n\nNext steps:\n  * Deploy an HTTP Gateway: https://istio.io/latest/docs/tasks/traffic-management/ingress/ingress-control/\n  * Deploy an HTTPS Gateway: https://istio.io/latest/docs/tasks/traffic-management/ingress/secure-ingress/\n",
+                "revision": 1,
+                "values": "{}",
+                "version": "1.22.3"
+              }
+            ],
+            "name": "gateway",
+            "namespace": "istio-ingress",
+            "pass_credentials": false,
+            "postrender": [],
+            "recreate_pods": false,
+            "render_subchart_notes": true,
+            "replace": false,
+            "repository": "https://istio-release.storage.googleapis.com/charts",
+            "repository_ca_file": null,
+            "repository_cert_file": null,
+            "repository_key_file": null,
+            "repository_password": null,
+            "repository_username": null,
+            "reset_values": false,
+            "reuse_values": false,
+            "set": [],
+            "set_list": [],
+            "set_sensitive": [],
+            "skip_crds": false,
+            "status": "deployed",
+            "timeout": 300,
+            "values": null,
+            "verify": false,
+            "version": "1.22.3",
+            "wait": true,
+            "wait_for_jobs": false
+          },
+          "sensitive_attributes": [
+            [
+              {
+                "type": "get_attr",
+                "value": "repository_password"
+              }
+            ]
+          ],
+          "private": "eyJzY2hlbWFfdmVyc2lvbiI6IjEifQ==",
+          "dependencies": [
+            "civo_firewall.kubefirst",
+            "civo_kubernetes_cluster.kubefirst",
+            "civo_network.kubefirst",
+            "helm_release.istio_base",
+            "helm_release.istiod"
+          ]
+        }
+      ]
+    },
+    {
+      "mode": "managed",
+      "type": "helm_release",
+      "name": "istio_base",
+      "provider": "provider[\"registry.terraform.io/hashicorp/helm\"]",
+      "instances": [
+        {
+          "schema_version": 1,
+          "attributes": {
+            "atomic": false,
+            "chart": "base",
+            "cleanup_on_fail": false,
+            "create_namespace": true,
+            "dependency_update": false,
+            "description": null,
+            "devel": null,
+            "disable_crd_hooks": false,
+            "disable_openapi_validation": false,
+            "disable_webhooks": false,
+            "force_update": false,
+            "id": "my-istio-base-release",
+            "keyring": null,
+            "lint": false,
+            "manifest": null,
+            "max_history": 0,
+            "metadata": [
+              {
+                "app_version": "1.22.3",
+                "chart": "base",
+                "first_deployed": 1722833211,
+                "last_deployed": 1722833211,
+                "name": "my-istio-base-release",
+                "namespace": "istio-system",
+                "notes": "Istio base successfully installed!\n\nTo learn more about the release, try:\n  $ helm status my-istio-base-release -n istio-system\n  $ helm get all my-istio-base-release -n istio-system\n",
+                "revision": 1,
+                "values": "{\"global\":{\"istioNamespace\":\"istio-system\"}}",
+                "version": "1.22.3"
+              }
+            ],
+            "name": "my-istio-base-release",
+            "namespace": "istio-system",
+            "pass_credentials": false,
+            "postrender": [],
+            "recreate_pods": false,
+            "render_subchart_notes": true,
+            "replace": false,
+            "repository": "https://istio-release.storage.googleapis.com/charts",
+            "repository_ca_file": null,
+            "repository_cert_file": null,
+            "repository_key_file": null,
+            "repository_password": null,
+            "repository_username": null,
+            "reset_values": false,
+            "reuse_values": false,
+            "set": [
+              {
+                "name": "global.istioNamespace",
+                "type": "",
+                "value": "istio-system"
+              }
+            ],
+            "set_list": [],
+            "set_sensitive": [],
+            "skip_crds": false,
+            "status": "deployed",
+            "timeout": 300,
+            "values": null,
+            "verify": false,
+            "version": "1.22.3",
+            "wait": true,
+            "wait_for_jobs": false
+          },
+          "sensitive_attributes": [
+            [
+              {
+                "type": "get_attr",
+                "value": "repository_password"
+              }
+            ]
+          ],
+          "private": "eyJzY2hlbWFfdmVyc2lvbiI6IjEifQ==",
+          "dependencies": [
+            "civo_firewall.kubefirst",
+            "civo_kubernetes_cluster.kubefirst",
+            "civo_network.kubefirst"
+          ]
+        }
+      ]
+    },
+    {
+      "mode": "managed",
+      "type": "helm_release",
+      "name": "istiod",
+      "provider": "provider[\"registry.terraform.io/hashicorp/helm\"]",
+      "instances": [
+        {
+          "schema_version": 1,
+          "attributes": {
+            "atomic": false,
+            "chart": "istiod",
+            "cleanup_on_fail": false,
+            "create_namespace": true,
+            "dependency_update": false,
+            "description": null,
+            "devel": null,
+            "disable_crd_hooks": false,
+            "disable_openapi_validation": false,
+            "disable_webhooks": false,
+            "force_update": false,
+            "id": "my-istiod-release",
+            "keyring": null,
+            "lint": false,
+            "manifest": null,
+            "max_history": 0,
+            "metadata": [
+              {
+                "app_version": "1.22.3",
+                "chart": "istiod",
+                "first_deployed": 1722833224,
+                "last_deployed": 1722833224,
+                "name": "my-istiod-release",
+                "namespace": "istio-system",
+                "notes": "\"istiod\" successfully installed!\n\nTo learn more about the release, try:\n  $ helm status my-istiod-release -n istio-system\n  $ helm get all my-istiod-release -n istio-system\n\nNext steps:\n  * Deploy a Gateway: https://istio.io/latest/docs/setup/additional-setup/gateway/\n  * Try out our tasks to get started on common configurations:\n    * https://istio.io/latest/docs/tasks/traffic-management\n    * https://istio.io/latest/docs/tasks/security/\n    * https://istio.io/latest/docs/tasks/policy-enforcement/\n  * Review the list of actively supported releases, CVE publications and our hardening guide:\n    * https://istio.io/latest/docs/releases/supported-releases/\n    * https://istio.io/latest/news/security/\n    * https://istio.io/latest/docs/ops/best-practices/security/\n\nFor further documentation see https://istio.io website\n",
+                "revision": 1,
+                "values": "{\"global\":{\"istioNamespace\":\"istio-system\"},\"meshConfig\":{\"ingressSelector\":\"gateway\",\"ingressService\":\"istio-gateway\"},\"telemetry\":{\"enabled\":true}}",
+                "version": "1.22.3"
+              }
+            ],
+            "name": "my-istiod-release",
+            "namespace": "istio-system",
+            "pass_credentials": false,
+            "postrender": [],
+            "recreate_pods": false,
+            "render_subchart_notes": true,
+            "replace": false,
+            "repository": "https://istio-release.storage.googleapis.com/charts",
+            "repository_ca_file": null,
+            "repository_cert_file": null,
+            "repository_key_file": null,
+            "repository_password": null,
+            "repository_username": null,
+            "reset_values": false,
+            "reuse_values": false,
+            "set": [
+              {
+                "name": "global.istioNamespace",
+                "type": "",
+                "value": "istio-system"
+              },
+              {
+                "name": "meshConfig.ingressSelector",
+                "type": "",
+                "value": "gateway"
+              },
+              {
+                "name": "meshConfig.ingressService",
+                "type": "",
+                "value": "istio-gateway"
+              },
+              {
+                "name": "telemetry.enabled",
+                "type": "",
+                "value": "true"
+              }
+            ],
+            "set_list": [],
+            "set_sensitive": [],
+            "skip_crds": false,
+            "status": "deployed",
+            "timeout": 300,
+            "values": null,
+            "verify": false,
+            "version": "1.22.3",
+            "wait": true,
+            "wait_for_jobs": false
+          },
+          "sensitive_attributes": [
+            [
+              {
+                "type": "get_attr",
+                "value": "repository_password"
+              }
+            ]
+          ],
+          "private": "eyJzY2hlbWFfdmVyc2lvbiI6IjEifQ==",
+          "dependencies": [
+            "civo_firewall.kubefirst",
+            "civo_kubernetes_cluster.kubefirst",
+            "civo_network.kubefirst",
+            "helm_release.istio_base"
+          ]
+        }
+      ]
+    },
+    {
+      "mode": "managed",
+      "type": "local_file",
+      "name": "kubeconfig",
+      "provider": "provider[\"registry.terraform.io/hashicorp/local\"]",
+      "instances": [
+        {
+          "schema_version": 0,
+          "attributes": {
+            "content": "apiVersion: v1\nkind: Config\nclusters:\n- name: workload1-c591-269dda\n  cluster:\n    server: https://74.220.16.18:6443\n    certificate-authority-data: LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSUJpVENDQVRDZ0F3SUJBZ0lSQUlUQXlrR2UyT2dORmpNMzY2ajk3QUF3Q2dZSUtvWkl6ajBFQXdJd0ZURVQKTUJFR0ExVUVDaE1LYTNWaVpYSnVaWFJsY3pBZUZ3MHlOREE0TURVd05EUXlNVEphRncwek5EQTRNRE13TkRReQpNVEphTUJVeEV6QVJCZ05WQkFvVENtdDFZbVZ5Ym1WMFpYTXdXVEFUQmdjcWhrak9QUUlCQmdncWhrak9QUU1CCkJ3TkNBQVQ3VHBiREVWbERUemt4SDl6NWo1eWFuNC9Tc1RMelBtZGdwN2Q4aUJmRitJTU43UEQ1SVdsTDVRS1AKVFhtcGszNDVNbnRsZmE2dGdlaWZYMllQWG9nM28yRXdYekFPQmdOVkhROEJBZjhFQkFNQ0FvUXdIUVlEVlIwbApCQll3RkFZSUt3WUJCUVVIQXdFR0NDc0dBUVVGQndNQ01BOEdBMVVkRXdFQi93UUZNQU1CQWY4d0hRWURWUjBPCkJCWUVGT3k2Lzg4NWMyR1ZBQUFlL3g1VHl3dVVoZGVETUFvR0NDcUdTTTQ5QkFNQ0EwY0FNRVFDSUFwbk1DSVAKVUFlbmZZTzVyM2RsN1lMSnhablA4anpPWnBDdzN5NS9BanExQWlBYWtGekMvU0pKN2tnb0RyTkdDUVpTOHNLVApwb3U4ZGd4bUJLSDVYZlNVcVE9PQotLS0tLUVORCBDRVJUSUZJQ0FURS0tLS0tCg==\nusers:\n- name: admin@workload1-c591-269dda\n  user:\n    client-certificate-data: LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSUJoVENDQVN1Z0F3SUJBZ0lSQUk1QmxUSExTekJHWU5iK29hL0hWVU13Q2dZSUtvWkl6ajBFQXdJd0ZURVQKTUJFR0ExVUVDaE1LYTNWaVpYSnVaWFJsY3pBZUZ3MHlOREE0TURVd05EUTBOREJhRncweU5UQTRNRFV3TkRRMApOVEJhTUNreEZ6QVZCZ05WQkFvVERuTjVjM1JsYlRwdFlYTjBaWEp6TVE0d0RBWURWUVFERXdWaFpHMXBiakJaCk1CTUdCeXFHU000OUFnRUdDQ3FHU000OUF3RUhBMElBQkFpejRtT3RLZEZUc3FyOXZMc1p2OVF1YVZhNzdNRVgKaGNoYnI3bi9ZNnJoSmdMRzdxRkM3ZjE5bURiOUxBWU00WitPQ0RGa1NDZTVyMHdBWkU1a2M2K2pTREJHTUE0RwpBMVVkRHdFQi93UUVBd0lGb0RBVEJnTlZIU1VFRERBS0JnZ3JCZ0VGQlFjREFqQWZCZ05WSFNNRUdEQVdnQlRzCnV2L1BPWE5obFFBQUh2OGVVOHNMbElYWGd6QUtCZ2dxaGtqT1BRUURBZ05JQURCRkFpRUF5VVhneEl5UFV0VGMKYzJSMGI3Z0FyeVpuN2c2cXluaUw5MTlRRk5SZHdVVUNJQkc4K1RwQUdaR1E2STVnVFNGamRlSzh5UzF2SmRqOQplRDZYenFETXhlUHMKLS0tLS1FTkQgQ0VSVElGSUNBVEUtLS0tLQo=\n    client-key-data: LS0tLS1CRUdJTiBFQyBQUklWQVRFIEtFWS0tLS0tCk1IY0NBUUVFSU80NEhXeG9LWXdUUnRIVEVrMm0xLzNESzIyRjlqZVg5U3duTHhXb01wazJvQW9HQ0NxR1NNNDkKQXdFSG9VUURRZ0FFQ0xQaVk2MHAwVk95cXYyOHV4bS8xQzVwVnJ2c3dSZUZ5RnV2dWY5anF1RW1Bc2J1b1VMdAovWDJZTnYwc0JnemhuNDRJTVdSSUo3bXZUQUJrVG1SenJ3PT0KLS0tLS1FTkQgRUMgUFJJVkFURSBLRVktLS0tLQo=\ncontexts:\n- context:\n    cluster: workload1-c591-269dda\n    namespace: default\n    user: admin@workload1-c591-269dda\n  name: admin@workload1-c591-269dda\ncurrent-context: admin@workload1-c591-269dda\n",
+            "content_base64": null,
+            "content_base64sha256": "bGJK0ah4o+ZAdiE+J/pcQq2jMRu4SuOgbJgS1W/QMUQ=",
+            "content_base64sha512": "la7znoaaFPGSegEnaxliUQ+vfx0WAmUN3O0jG/GxdcWl9cqv6EJyQPz9JoJ3ZCHp2ByO7/Qw+JZpS+7ht+Nm0Q==",
+            "content_md5": "7a14b8ea8e6c12fde235de703b3bb481",
+            "content_sha1": "1b2f56e3738538f7726fce1f66481887795f7ac7",
+            "content_sha256": "6c624ad1a878a3e64076213e27fa5c42ada3311bb84ae3a06c9812d56fd03144",
+            "content_sha512": "95aef39e869a14f1927a01276b1962510faf7f1d1602650ddced231bf1b175c5a5f5caafe8427240fcfd2682776421e9d81c8eeff430f896694beee1b7e366d1",
+            "directory_permission": "0777",
+            "file_permission": "0777",
+            "filename": "./kubeconfig",
+            "id": "1b2f56e3738538f7726fce1f66481887795f7ac7",
+            "sensitive_content": null,
+            "source": null
+          },
+          "sensitive_attributes": [
+            [
+              {
+                "type": "get_attr",
+                "value": "sensitive_content"
+              }
+            ],
+            [
+              {
+                "type": "get_attr",
+                "value": "content"
+              }
+            ]
+          ],
+          "dependencies": [
+            "civo_firewall.kubefirst",
+            "civo_kubernetes_cluster.kubefirst",
+            "civo_network.kubefirst"
+          ]
+        }
+      ]
+    }
+  ],
+  "check_results": null
+}
