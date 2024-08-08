@@ -31,24 +31,6 @@ export KUBECONFIG=./kubeconfig
 
 The details of login into argocd will be in the output of the script
 
-you can then install the rest of it
-
-```
-kubectl apply -f kafka-application.yaml
-```
-
-then the rest of linkerd;
-
-```
-kubectl apply -f ../../istio-1.22.3/samples/addons/
-```
-
-then you can start port forwarding
-
-```
-kubectl port-forward kiali-db7b677-r5bdz 20001 -n istio-system
-```
-
 
 # To Destroy
 
@@ -62,7 +44,7 @@ terraform state rm local_file.kubeconfig
 # destroy the whole stack except above excluded resource(s)
 terraform destroy 
 
-# setting up terraform
+# setting up istio
 
 firstly do auto sidecar injection
 ```
@@ -116,4 +98,30 @@ istioctl dashboard kiali
 istioctl dashboard zipkin
 istioctl dashboard prometheus
 istioctl dashboard grafana
+```
+
+
+quick reference
+
+```
+kubectl create namespace web
+kubectl create namespace snowplow
+
+istioctl install -f trace-config.yaml
+kubectl apply -f enable-tracing.yaml 
+kubectl label namespace default istio-injection=enabled
+kubectl label namespace snowplow istio-injection=enabled
+kubectl label namespace web istio-injection=enabled
+kubectl get ns -Listio-injection
+export GATEWAY_IP=$(kubectl get svc -n istio-system gateway \  
+    -ojsonpath='{.status.loadBalancer.ingress[0].ip}')
+kubectl apply -f gateway.yaml
+kubectl apply -f web-virtualservice.yaml
+kubectl apply -f websocket-virtualservice.yaml
+kubectl apply -f addons/
+kubectl apply -f addons/extras/zipkin.yaml
+istioctl dashboard kiali
+
+kubectl apply -f snowplow-application.yaml
+kubectl apply -f charts-application.yaml
 ```
